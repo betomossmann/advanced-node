@@ -1,7 +1,7 @@
 import { type LoadFacebookUserApi } from '@/data/contracts/apis'
 import { FacebookAuthenticationService } from '@/data/services'
 import { AuthError } from '@/domain/errors'
-import { mock } from 'jest-mock-extended'
+import { mock, type MockProxy } from 'jest-mock-extended'
 
 class LoadFacebookUserApiSpy implements LoadFacebookUserApi {
   token?: string
@@ -15,15 +15,28 @@ class LoadFacebookUserApiSpy implements LoadFacebookUserApi {
   }
 }
 
+type SutTypes = {
+  sut: FacebookAuthenticationService
+  loadFacebookUserApi: MockProxy<LoadFacebookUserApi>
+}
+
+const makeSut = (): SutTypes => {
+  const loadFacebookUserApi = mock<LoadFacebookUserApi>()
+  const sut = new FacebookAuthenticationService(loadFacebookUserApi)
+  return {
+    sut,
+    loadFacebookUserApi
+  }
+}
+
 describe('FacebookAuthenticationService', () => {
   it('Should call LoadFacebookUserApi with correct params', async () => {
-    const loadFacebookUserApi = new LoadFacebookUserApiSpy()
-    const sut = new FacebookAuthenticationService(loadFacebookUserApi)
+    const { sut, loadFacebookUserApi } = makeSut()
 
     await sut.perform({ token: 'any_token' })
 
-    expect(loadFacebookUserApi.token).toBe('any_token')
-    expect(loadFacebookUserApi.callsCount).toBe(1)
+    expect(loadFacebookUserApi.loadUser).toHaveBeenCalledWith({ token: 'any_token' })
+    expect(loadFacebookUserApi.loadUser).toHaveBeenCalledTimes(1)
   })
 
   // Another example(Same test as above)
