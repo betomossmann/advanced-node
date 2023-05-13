@@ -25,6 +25,19 @@ describe('FacebookAuthenticationService', () => {
     expect(loadFacebookUserApi.callsCount).toBe(1)
   })
 
+  // Another example(Same test as above)
+  it('Should call LoadFacebookUserApi with correct params(demo with jest)', async () => {
+    const loadFacebookUserApi = {
+      loadUser: jest.fn()
+    }
+    const sut = new FacebookAuthenticationService(loadFacebookUserApi)
+
+    await sut.perform({ token: 'any_token' })
+
+    expect(loadFacebookUserApi.loadUser).toHaveBeenCalledWith({ token: 'any_token' })
+    expect(loadFacebookUserApi.loadUser).toHaveBeenCalledTimes(1)
+  })
+
   it('Should return AuthError when LoadFacebookUserApi returns undefined', async () => {
     const loadFacebookUserApi = new LoadFacebookUserApiSpy()
     loadFacebookUserApi.result = undefined
