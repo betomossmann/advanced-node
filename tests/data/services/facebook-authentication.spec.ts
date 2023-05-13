@@ -1,6 +1,7 @@
 import { type LoadFacebookUserApi } from '@/data/contracts/apis'
 import { FacebookAuthenticationService } from '@/data/services'
 import { AuthError } from '@/domain/errors'
+import { mock } from 'jest-mock-extended'
 
 class LoadFacebookUserApiSpy implements LoadFacebookUserApi {
   token?: string
@@ -41,6 +42,17 @@ describe('FacebookAuthenticationService', () => {
   it('Should return AuthError when LoadFacebookUserApi returns undefined', async () => {
     const loadFacebookUserApi = new LoadFacebookUserApiSpy()
     loadFacebookUserApi.result = undefined
+    const sut = new FacebookAuthenticationService(loadFacebookUserApi)
+
+    const authResult = await sut.perform({ token: 'any_token' })
+
+    expect(authResult).toEqual(new AuthError())
+  })
+
+  // Another example(Same test as above)
+  it('Should return AuthError when LoadFacebookUserApi returns undefined(demo with mock-jest)', async () => {
+    const loadFacebookUserApi = mock<LoadFacebookUserApi>()
+    loadFacebookUserApi.loadUser.mockResolvedValueOnce(undefined)
     const sut = new FacebookAuthenticationService(loadFacebookUserApi)
 
     const authResult = await sut.perform({ token: 'any_token' })
