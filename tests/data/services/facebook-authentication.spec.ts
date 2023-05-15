@@ -1,11 +1,13 @@
 import { type LoadFacebookUserApi } from '@/data/contracts/apis'
 import { type LoadUserAccountRepository, type SaveFacebookAccountRepository } from '@/data/contracts/repos'
 import { FacebookAuthenticationService } from '@/data/services'
+import { type TokenGenerator } from '@/data/contracts/crypto'
 import { AuthError } from '@/domain/errors'
 import { mock, type MockProxy } from 'jest-mock-extended'
 
 describe('FacebookAuthenticationService', () => {
   let facebookApi: MockProxy<LoadFacebookUserApi>
+  let crypto: MockProxy<TokenGenerator>
   let userAccountRepo: MockProxy<LoadUserAccountRepository & SaveFacebookAccountRepository>
   let sut: FacebookAuthenticationService
   const token = 'any_token'
@@ -19,9 +21,12 @@ describe('FacebookAuthenticationService', () => {
     })
     userAccountRepo = mock()
     userAccountRepo.load.mockResolvedValue(undefined)
+    userAccountRepo.saveWithFacebook.mockResolvedValue({ id: 'any_account_id' })
+    crypto = mock()
     sut = new FacebookAuthenticationService(
       facebookApi,
-      userAccountRepo
+      userAccountRepo,
+      crypto
     )
   })
 
@@ -59,10 +64,7 @@ describe('FacebookAuthenticationService', () => {
   })
 
   it('Should not update account name', async () => {
-    userAccountRepo.load.mockResolvedValueOnce({
-      id: 'any_id',
-      name: 'any_name'
-    })
+    userAccountRepo.load.mockResolvedValueOnce({ id: 'any_id', name: 'any_name' })
 
     await sut.perform({ token })
 
@@ -76,9 +78,7 @@ describe('FacebookAuthenticationService', () => {
   })
 
   it('Should update account name', async () => {
-    userAccountRepo.load.mockResolvedValueOnce({
-      id: 'any_id'
-    })
+    userAccountRepo.load.mockResolvedValueOnce({ id: 'any_id' })
 
     await sut.perform({ token })
 
@@ -89,5 +89,12 @@ describe('FacebookAuthenticationService', () => {
       facebookId: 'any_fb_id'
     })
     expect(userAccountRepo.saveWithFacebook).toHaveBeenCalledTimes(1)
+  })
+
+  it('Should call tokenGenerator with correct params', async () => {
+    await sut.perform({ token })
+
+    expect(crypto.generateToken).toHaveBeenCalledWith({ key: 'any_account_id' })
+    expect(crypto.generateToken).toHaveBeenCalledTimes(1)
   })
 })
