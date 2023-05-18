@@ -13,7 +13,7 @@ import { getRepository } from 'typeorm'
  *
  */
 
-export class PostgresUserAccountRepository implements LoadUserAccountRepository {
+export class PostgresUserAccountRepository implements LoadUserAccountRepository, SaveFacebookAccountRepository {
   private readonly pgUserRepo = getRepository(PgUser)
 
   // async load (params: LoadParams): Promise<LoadResult> Just example
