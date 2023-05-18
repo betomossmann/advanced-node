@@ -1,4 +1,4 @@
-> ## Princípios
+> ## Principles
 
 * Single Responsibility
 * Open Closed
@@ -44,9 +44,9 @@
 * Primitive Obsession
 * Refused Bequest
 * Shotgun Surgery
-* Speculative Generality
+* Speculative Generality*
 
-> ## Metodologias e Designs
+> ## Methodologies and Designs
 
 * TDD
 * Clean Architecture
@@ -58,7 +58,7 @@
 * Use Cases
 * Spike (Agile)
 
-> ## Bibliotecas e Ferramentas
+> ## Libraries and Tools
 
 * NPM
 * Typescript
@@ -89,23 +89,23 @@
 * DotEnv
 * Ts-Node-Dev
 
-> ## Features do Typescript
+> ## Typescript Features
 
-* POO Avançado
+* Advanced OOP
 * Strict Mode
 * Interface
 * TypeAlias
 * Namespace
 * Utility Types
-* Modularização de Paths
-* Configurações
+* Path Modularization
+* Configurations
 * Build
 
-> ## Features de Testes
+> ## Testing Features
 
-* Testes Unitários
-* Testes de Integração
-* Cobertura de Testes
+* Unit Testing
+* Integration Testing
+* Test Coverage
 * Test Doubles
 * Mocks
 * Stubs
