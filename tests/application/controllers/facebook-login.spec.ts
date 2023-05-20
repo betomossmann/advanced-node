@@ -46,7 +46,7 @@ describe('FacebookLoginController', () => {
     })
   })
 
-  it('Should return 500 if authentication throws', async () => {
+  it('Should return 500 on infra error', async () => {
     const error = new Error('infra_error')
     facebookAuth.perform.mockRejectedValueOnce(error)
 
