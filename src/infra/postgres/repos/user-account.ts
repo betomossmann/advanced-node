@@ -2,24 +2,16 @@ import { type SaveFacebookAccountRepository, type LoadUserAccountRepository } fr
 import { PgUser } from '@/infra/postgres/entities'
 import { getRepository } from 'typeorm'
 
-/**
- * You can use type alias to shorten the name, example:
- *
- * type LoadParams = LoadUserAccountRepository.Params
- * type LoadResult = LoadUserAccountRepository.Result
- *
- * type SaveParams = SaveFacebookAccountRepository.Params
- * type SaveResult = SaveFacebookAccountRepository.Result
- *
- */
+type LoadParams = LoadUserAccountRepository.Params
+type LoadResult = LoadUserAccountRepository.Result
+type SaveParams = SaveFacebookAccountRepository.Params
+type SaveResult = SaveFacebookAccountRepository.Result
 
 export class PostgresUserAccountRepository implements LoadUserAccountRepository, SaveFacebookAccountRepository {
   private readonly pgUserRepo = getRepository(PgUser)
 
-  // async load (params: LoadParams): Promise<LoadResult> Just example
-
-  async load (params: LoadUserAccountRepository.Params): Promise<LoadUserAccountRepository.Result> {
-    const pgUser = await this.pgUserRepo.findOne({ email: params.email })
+  async load ({ email }: LoadParams): Promise<LoadResult> {
+    const pgUser = await this.pgUserRepo.findOne({ email })
     if (pgUser !== undefined) {
       return {
         id: pgUser?.id.toString(),
@@ -28,24 +20,15 @@ export class PostgresUserAccountRepository implements LoadUserAccountRepository,
     }
   }
 
-  async saveWithFacebook (params: SaveFacebookAccountRepository.Params): Promise<SaveFacebookAccountRepository.Result> {
-    let id: string
-    if (params.id === undefined) {
-      const pgUser = await this.pgUserRepo.save({
-        email: params.email,
-        name: params.name,
-        facebookId: params.facebookId
-      })
-      id = pgUser.id.toString()
+  async saveWithFacebook ({ id, name, email, facebookId }: SaveParams): Promise<SaveResult> {
+    let ResultId: string
+    if (id === undefined) {
+      const pgUser = await this.pgUserRepo.save({ email, name, facebookId })
+      ResultId = pgUser.id.toString()
     } else {
-      id = params.id
-      await this.pgUserRepo.update({
-        id: parseInt(params.id)
-      }, {
-        name: params.name,
-        facebookId: params.facebookId
-      })
+      ResultId = id
+      await this.pgUserRepo.update({ id: parseInt(id) }, { name, facebookId })
     }
-    return { id }
+    return { id: ResultId }
   }
 }
