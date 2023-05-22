@@ -1,7 +1,7 @@
+import { adaptExpressRoute as adapt } from '@/infra/http'
 import { makeFacebookLoginController } from '@/main/factories/controller'
-import { adaptExpressRoute } from '@/infra/http'
 import { type Router } from 'express'
 
 export default (router: Router): void => {
-  router.post('/login/facebook', adaptExpressRoute(makeFacebookLoginController()))
+  router.post('/login/facebook', adapt(makeFacebookLoginController()))
 }
