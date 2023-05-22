@@ -2,8 +2,8 @@ import { RequiredStringValidator } from '@/application/validation'
 import { FacebookLoginController } from '@/application/controllers'
 import { ServerError, UnauthorizedError } from '@/application/errors'
 import { type FacebookAuthentication } from '@/domain/features'
-import { AccessToken } from '@/domain/models'
-import { AuthError } from '@/domain/errors'
+import { AccessToken } from '@/domain/entities'
+import { AuthError } from '@/domain/entities/errors'
 import { type MockProxy, mock } from 'jest-mock-extended'
 
 describe('FacebookLoginController', () => {
