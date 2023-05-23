@@ -20,7 +20,7 @@ export const unauthorized = (): HttpResponse<Error> => ({
   data: new UnauthorizedError()
 })
 
-export const serverError = (error: Error): HttpResponse<Error> => ({
+export const serverError = (error: unknown): HttpResponse<Error> => ({
   statusCode: 500,
-  data: new ServerError(error)
+  data: new ServerError(error instanceof Error ? error : undefined)
 })
