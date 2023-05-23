@@ -1,7 +1,7 @@
 import { type HttpResponse } from '@/application/helpers'
 import { getMockReq, getMockRes } from '@jest-mock/express'
-import { mock } from 'jest-mock-extended'
-import { type RequestHandler } from 'express'
+import { type MockProxy, mock } from 'jest-mock-extended'
+import { type Request, type Response, type RequestHandler, type NextFunction } from 'express'
 
 type Adapter = (middleware: Middleware) => RequestHandler
 
@@ -14,13 +14,24 @@ interface Middleware {
 }
 
 describe('ExpressMiddleware', () => {
-  it('Should call handle with correct request', async () => {
-    const req = getMockReq({ headers: { any: 'any' } })
-    const res = getMockRes().res
-    const next = getMockRes().next
-    const middleware = mock<Middleware>()
-    const sut = adaptExpressRouteMiddleware(middleware)
+  let req: Request
+  let res: Response
+  let next: NextFunction
+  let middleware: MockProxy<Middleware>
+  let sut: RequestHandler
 
+  beforeAll(() => {
+    req = getMockReq({ headers: { any: 'any' } })
+    res = getMockRes().res
+    next = getMockRes().next
+    middleware = mock<Middleware>()
+  })
+
+  beforeEach(() => {
+    sut = adaptExpressRouteMiddleware(middleware)
+  })
+
+  it('Should call handle with correct request', async () => {
     await sut(req, res, next)
 
     expect(middleware.handle).toHaveBeenCalledWith({ any: 'any' })
@@ -28,11 +39,7 @@ describe('ExpressMiddleware', () => {
   })
 
   it('Should call handle with empty request', async () => {
-    const req = getMockReq()
-    const res = getMockRes().res
-    const next = getMockRes().next
-    const middleware = mock<Middleware>()
-    const sut = adaptExpressRouteMiddleware(middleware)
+    req = getMockReq()
 
     await sut(req, res, next)
 
