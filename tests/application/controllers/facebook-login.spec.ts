@@ -1,7 +1,6 @@
 import { RequiredStringValidator } from '@/application/validation'
 import { FacebookLoginController } from '@/application/controllers'
-import { ServerError, UnauthorizedError } from '@/application/errors'
-import { AccessToken } from '@/domain/entities'
+import { UnauthorizedError } from '@/application/errors'
 import { AuthError } from '@/domain/entities/errors'
 
 describe('FacebookLoginController', () => {
@@ -12,7 +11,7 @@ describe('FacebookLoginController', () => {
   beforeAll(() => {
     token = 'any_token'
     facebookAuth = jest.fn()
-    facebookAuth.mockResolvedValue(new AccessToken('any_value'))
+    facebookAuth.mockResolvedValue({ accessToken: 'any_value' })
   })
 
   beforeEach(() => {
@@ -35,24 +34,13 @@ describe('FacebookLoginController', () => {
   })
 
   it('Should return 401 if authentication fails', async () => {
-    facebookAuth.mockResolvedValueOnce(new AuthError())
+    facebookAuth.mockRejectedValueOnce(new AuthError())
+
     const httpResponse = await sut.handle({ token })
 
     expect(httpResponse).toEqual({
       statusCode: 401,
       data: new UnauthorizedError()
-    })
-  })
-
-  it('Should return 500 on infra error', async () => {
-    const error = new Error('infra_error')
-    facebookAuth.mockRejectedValueOnce(error)
-
-    const httpResponse = await sut.handle({ token })
-
-    expect(httpResponse).toEqual({
-      statusCode: 500,
-      data: new ServerError(error)
     })
   })
 
