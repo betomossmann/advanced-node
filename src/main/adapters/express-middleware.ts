@@ -3,7 +3,7 @@ import { type RequestHandler } from 'express'
 
 type Adapter = (middleware: Middleware) => RequestHandler
 
-export const adaptExpressRouteMiddleware: Adapter = middleware => async (req, res, next) => {
+export const adaptExpressMiddleware: Adapter = middleware => async (req, res, next) => {
   const { statusCode, data } = await middleware.handle({ ...req.headers })
   if (statusCode === 200) {
     const entries = Object.entries(data).filter(entry => entry[1])

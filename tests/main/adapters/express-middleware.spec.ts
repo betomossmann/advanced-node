@@ -2,7 +2,7 @@ import { type Middleware } from '@/application/middlewares'
 import { getMockReq, getMockRes } from '@jest-mock/express'
 import { type MockProxy, mock } from 'jest-mock-extended'
 import { type Request, type Response, type RequestHandler, type NextFunction } from 'express'
-import { adaptExpressRouteMiddleware } from '@/main/adapters'
+import { adaptExpressMiddleware } from '@/main/adapters'
 
 describe('ExpressMiddleware', () => {
   let req: Request
@@ -28,7 +28,7 @@ describe('ExpressMiddleware', () => {
   })
 
   beforeEach(() => {
-    sut = adaptExpressRouteMiddleware(middleware)
+    sut = adaptExpressMiddleware(middleware)
   })
 
   it('Should call handle with correct request', async () => {
