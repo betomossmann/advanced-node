@@ -1,4 +1,4 @@
-import { RequiredStringValidator } from '@/application/validation'
+import { RequiredString } from '@/application/validation'
 import { FacebookLoginController } from '@/application/controllers'
 import { UnauthorizedError } from '@/application/errors'
 import { AuthError } from '@/domain/entities/errors'
@@ -22,7 +22,7 @@ describe('FacebookLoginController', () => {
     const validators = sut.buildValidators({ token })
 
     expect(validators).toEqual([
-      new RequiredStringValidator('any_token', 'token')
+      new RequiredString('any_token', 'token')
     ])
   })
 
@@ -44,7 +44,7 @@ describe('FacebookLoginController', () => {
     })
   })
 
-  it('Should return 200 if authentication succeeds', async () => {
+  it('should return 200 if authentication succeeds', async () => {
     const httpResponse = await sut.handle({ token })
 
     expect(httpResponse).toEqual({

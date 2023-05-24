@@ -1,9 +1,46 @@
-import { RequiredStringValidator, ValidationBuilder } from '@/application/validation'
+import { Required, RequiredBuffer, RequiredString, ValidationBuilder } from '@/application/validation'
 
 describe('ValidationBuilder', () => {
-  it('Should return a RequiredStringValidator', () => {
-    const validators = ValidationBuilder.of({ value: 'any_value', fieldName: 'any_name' }).required().build()
+  it('should return RequiredString', () => {
+    const validators = ValidationBuilder
+      .of({ value: 'any_value' })
+      .required()
+      .build()
 
-    expect(validators).toEqual([new RequiredStringValidator('any_value', 'any_name')])
+    expect(validators).toEqual([new RequiredString('any_value')])
+  })
+
+  it('should return RequiredBuffer', () => {
+    const buffer = Buffer.from('any_buffer')
+
+    const validators = ValidationBuilder
+      .of({ value: buffer })
+      .required()
+      .build()
+
+    expect(validators).toEqual([new RequiredBuffer(buffer)])
+  })
+
+  it('should return Required', () => {
+    const validators = ValidationBuilder
+      .of({ value: { any: 'any' } })
+      .required()
+      .build()
+
+    expect(validators).toEqual([new Required({ any: 'any' })])
+  })
+
+  it('should return Required', () => {
+    const buffer = Buffer.from('any_buffer')
+
+    const validators = ValidationBuilder
+      .of({ value: { buffer } })
+      .required()
+      .build()
+
+    expect(validators).toEqual([
+      new Required({ buffer }),
+      new RequiredBuffer(buffer)
+    ])
   })
 })

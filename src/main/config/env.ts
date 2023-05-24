@@ -5,5 +5,5 @@ export const env = {
     accessToken: process.env.FB_ACCESS_TOKEN ?? ''
   },
   port: process.env.PORT ?? 8080,
-  jwtSecret: process.env.JWT_SECRET ?? ''
+  jwtSecret: process.env.JWT_SECRET ?? 'jw743hr7f5e78g85fe'
 }
