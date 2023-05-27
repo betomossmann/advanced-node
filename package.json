@@ -9,9 +9,9 @@
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "test": "jest --passWithNoTests --no-cache --runInBand",
-    "test:w": "npm t -- --watch",
-    "test:s": "npm t -- --findRelatedTests",
-    "test:co": "npm t -- --coverage",
+    "test:staged": "npm t -- --findRelatedTests",
+    "test:watch": "npm t -- --watch",
+    "test:coverage": "npm t -- --coverage",
     "test:api": "npm t -- -c ./jest.integration.config.js ./tests/external/facebook-api.test.ts",
     "prepare": "husky install",
     "check": "npm-check -s -u"
